@@ -2,6 +2,11 @@ Valgrind Short Tutorial
 -----------------------
 Patrick Sanan, March 2017, for the ETH ERDW GFD group.
 
-See slides/ for the slides.
+If you just want the slides pdf (from Bitbucket),
 
-See the other directories for the examples mentioned in the slides.
+* click the Source icon on the left
+* go to slides/
+* click on valgrind_tutorial.pdf and "Download Raw"
+
+See slides/ for the slides.
+See examples/ for the examples mentioned in the slides.

@@ -1,5 +1,6 @@
 FC = gfortran
-FFLAGS = -Wall -Wpedantic -Wextra -g
+FFLAGS = -O0 -Wall -Wpedantic -Wextra -g
+FFLAGS += -fcheck=all 
 RM = rm -f
 
 EXNAME = hello
