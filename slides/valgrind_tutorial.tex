@@ -617,7 +617,7 @@ LEAK SUMMARY:
 \begin{frame}[fragile]
 \frametitle{Possibly Lost}
 \begin{itemize}
-\item These are cases where a pointer to the block doesn't exist, but it might still be possible to free the memory by manipulating a existing pointer to the middle of the block.
+\item These are cases where a pointer to the block doesn't exist, but it might still be possible to free the memory by manipulating an existing pointer to the middle of the block.
 \item Unless you are performing complicated pointer operations and know why this might be okay, if they occur in your code ..
 \item \textbf{Fix these!}
 \end{itemize}
