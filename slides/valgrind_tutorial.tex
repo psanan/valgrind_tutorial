@@ -58,6 +58,8 @@
     \end{beamercolorbox}
   \end{centering}
 }
+\setbeamertemplate{section page}[customsection]
+\setbeamertemplate{subsection page}[customsubsection]
 \AtBeginSection{\frame{\sectionpage}}
 %\AtBeginSubsection{\frame{\subsectionpage}}
 
@@ -65,9 +67,7 @@
 
 \graphicspath{{./images/}}
 
-% Customize hyperref here
-% color links, but not internal links (confusing..)
-\hypersetup{colorlinks=true,linkcolor=}
+\hypersetup{linkcolor=,urlcolor=magenta,colorlinks=true}
 
 \usepackage{tikz}
 \usepackage{algorithm}
@@ -81,8 +81,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title[]{Short Valgrind Tutorial} 
-\date[]{March 6, 2017} 
+\title{A Valgrind Tutorial}
+\date[]{}
 % Long date messes up footer
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,7 +95,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[fragile]
-\titlepage 
+\titlepage
 \begin{center}
 This presentation (with examples): \url{https://github.com/psanan/valgrind_tutorial} \\
 \includegraphics[height=0.25\textheight]{st-george-dragon.png}\\
@@ -110,9 +110,9 @@ This presentation (with examples): \url{https://github.com/psanan/valgrind_tutor
 \begin{itemize}
 \item \url{http://valgrind.org/docs/manual/faq.html#faq.pronounce}
 \item Valgrind, the gate to Valhalla \\
-\includegraphics[height=0.3\textheight]{gate.jpg} 
+\includegraphics[height=0.3\textheight]{gate.jpg}
 \item Pronounced like ``Val grinned'' \\
-\includegraphics[height=0.3\textheight]{val.jpg} 
+\includegraphics[height=0.3\textheight]{val.jpg}
 \end{itemize}
 \end{frame}
 
@@ -243,7 +243,7 @@ Hello, World!
 \end{lstlisting}
 \begin{itemize}
 \item There were no warning messages, and no leaks are reported, which means that valgrind detected no problems!
-\item This is commonly talked about as being ``valgrind clean'' 
+\item This is commonly talked about as being ``valgrind clean''
 \end{itemize}
 
 
@@ -277,7 +277,7 @@ Hello, World!
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Forgotten Free Example} 
+  \frametitle{Forgotten Free Example}
   \begin{itemize}
     \item See \texttt{examples/2\_forgotten\_free/c} and \texttt{make}
   \begin{lstlisting}
@@ -360,7 +360,7 @@ $ valgrind --leak-check=full ./forgotten_free
   \frametitle{Invalid Reads}
   \begin{itemize}
     \item C and Fortran let the programmer interact with memory directly by address.
-      \item This is efficient, but allows the programer to read memory locations which they have not allocated. 
+      \item This is efficient, but allows the programer to read memory locations which they have not allocated.
         \item This is almost always an error, because nothing can be assumed about the values of these memory locations.
         \item For modellers, this is dangerous: the behavior can be \emph{non-deterministic}, but this fact will often not manifest until one changes environments (say move from debugging on a laptop to running on the cluster)
   \end{itemize}
@@ -392,7 +392,7 @@ b = 0
 ==17965== All heap blocks were freed -- no leaks are possible
 ==17965==
 ==17965== For counts of detected and suppressed errors, rerun with: -v
-==17965== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)  
+==17965== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
       \end{lstlisting}
   \end{itemize}
 \end{frame}
@@ -592,7 +592,7 @@ LEAK SUMMARY:
 \begin{frame}[fragile]
   \frametitle{Definitely Lost}
   \begin{itemize}
-    \item These indicate blocks of memory to which no pointer exists. 
+    \item These indicate blocks of memory to which no pointer exists.
     \item Unless you are forced to use library code (such as MPI) which you can't fix..
     \item \textbf{Fix these!}
   \end{itemize}
@@ -622,7 +622,7 @@ LEAK SUMMARY:
 \item These are blocks which, at the end of the program, are not freed, though pointers to them exist.
 \item This is mostly harmless (the OS frees everything for you), so..
 \item \textbf{Don't worry about these}
-  \item You may notice that valgrind will often report fewer frees than allocations, and this is one reason. 
+  \item You may notice that valgrind will often report fewer frees than allocations, and this is one reason.
 \end{itemize}
 \end{frame}
 
@@ -636,7 +636,7 @@ LEAK SUMMARY:
   int a[3];
   a[10] = 1; /* fine according to memcheck */
   \end{lstlisting}
-\item See \texttt{examples\_7\_static\_error}. 
+\item See \texttt{examples\_7\_static\_error}.
 \item Note that valgrind does not catch the errors here
 \begin{lstlisting}
 $ valgrind ./static_error
