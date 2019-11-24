@@ -1,9 +1,9 @@
 \documentclass{beamer}
 
 \usepackage[backend=bibtex,maxnames=100]{biblatex} %from macports texlive-bibtex-extra
-\addbibresource{refs.bib}
 \renewcommand{\footnotesize}{\tiny}
 
+\usepackage[normalem]{ulem}
 \usepackage{listings}
 \usepackage{xcolor}
 \definecolor{verylightgray}{gray}{0.95}
@@ -97,7 +97,7 @@
 \begin{frame}[fragile]
 \titlepage 
 \begin{center}
-  This presentation (with examples): \url{https://bitbucket.org/psanan/valgrind_tutorial} \\
+This presentation (with examples): \url{https://github.com/psanan/valgrind_tutorial} \\
 \includegraphics[height=0.25\textheight]{st-george-dragon.png}\\
 {\tiny \url{http://valgrind.org/images/st-george-dragon.png}}
 \end{center}
@@ -108,11 +108,11 @@
 \begin{frame}[fragile]
 \frametitle{What's in a name?}
 \begin{itemize}
+\item \url{http://valgrind.org/docs/manual/faq.html#faq.pronounce}
 \item Valgrind, the gate to Valhalla \\
 \includegraphics[height=0.3\textheight]{gate.jpg} 
 \item Pronounced like ``Val grinned'' \\
 \includegraphics[height=0.3\textheight]{val.jpg} 
-\item \url{http://valgrind.org/docs/manual/faq.html#faq.pronounce}
 \end{itemize}
 \end{frame}
 
@@ -121,15 +121,36 @@
 \begin{itemize}
 \item In programming languages like C and Fortran, you are responsible for your own dynamic memory management
 \item You reserve memory on the \emph{heap} with which to do your computations
+\begin{lstlisting}[language=C]
+int *my_array = malloc(1024*sizeof(int));
+\end{lstlisting}
 \item You return this memory when you are finished with it
+\begin{lstlisting}[language=C]
+free(my_array);
+\end{lstlisting}
 \item You are responsible for only accessing memory locations that you have reserved
+\begin{lstlisting}[language=C]
+int i;
+for (i=0; i<1024; ++i) my_array[i] = i;
+\end{lstlisting}
 \item You can make mistakes!
+\begin{lstlisting}[language=C]
+int i;
+for (i=1; i<=1024; ++i) my_array[i] = i;
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What's the Problem?}
+\begin{itemize}
+  \item You \sout{can} will make mistakes!
 \begin{itemize}
 \item Forgetting to return memory
 \item Reading and writing into memory you haven't reserved
 \item Using uninitialized memory to control logic
 \end{itemize}
-\item These are all {\bf unacceptably bad things to do}, but the compiler can't warn you*
+\item These are all {\bf unacceptably bad things to do}, but the compiler (often) can't warn you, and the problem may not be obvious at runtime.
 \item Valgrind helps detect and locate these mistakes, using just your executable
 \end{itemize}
 \end{frame}
@@ -139,48 +160,20 @@
 \begin{frame}[fragile]
 \frametitle{Obtaining Valgrind}
 \begin{itemize}
-  \item Bad news: Valgrind does {\bf not} work on OS X 10.11 and 10.12 (it worked sporadically before that).
-    \begin{itemize}
-      \item MacPorts will install it for you, but it doesn't work!
-    \end{itemize}
-\item Valgrind works very well on most Linux systems, and is often available through a package manager
+\item Valgrind works very well on most *nux systems, and is often available through a package manager
 \begin{lstlisting}[language=bash]
-sudo apt-get install valgrind
+sudo apt install valgrind
+sudo port install valgrind # (see below)
+sudo brew install valgrind # (see below)
 \end{lstlisting}
-\item Valgrind is actually quite easy to download and build yourself (but probably still won't work on recent OS X systems) \\
-  \url{http://valgrind.org/downloads/current.html}
+\item Valgrind is also easy to download and build yourself \footnote{\url{http://valgrind.org/downloads/current.html}}
+\item Bad news: Valgrind typically {\bf does not work} on the latest version of OS X (e.g. 10.14 ``Mojave'' at the time of this writing). Workarounds:
+\begin{itemize}
+\item Use an older version of OS X
+\item Install a virtual Linux machine
+\item Use a real Linux machine (perhaps remotely)
 \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Building Valgrind 3.12.0 on Euler (thanks to Ilya Fomin)}
-  \begin{itemize}
-    \item Get the source onto Euler
-      \begin{lstlisting}
-    ssh euler
-    wget http://valgrind.org/downloads/valgrind-3.12.0.tar.bz2
-    tar xvf valgrind-3.12.0.tar.bz2
-      \end{lstlisting}
-\item configure, build, and install. It will take a long time.
-  Don't move the binary from this location!
-  \begin{lstlisting}
-    cd valgrind-3.12.0
-    mkdir -p $HOME/valgrind_install
-    ./configure --prefix=$HOME/valgrind_install
-    make && make install
-  \end{lstlisting}
-\item Add to your path
-  \begin{lstlisting}
-  export PATH=$PATH:$HOME/valgrind_install  # can go in your login file (e.g. .bashrc)
-    which valgrind
-  \end{lstlisting}
-\item Make sure it runs (by testing the built in \texttt{ls -l} function)
-  \begin{lstlisting}
-    valgrind ls -l
-    echo "valgrind ls -l" > tmp.sh && bsub < tmp.sh && rm tmp.sh  
-      # examine resulting lsf.xxx 
-  \end{lstlisting}
-  \end{itemize}
+\end{itemize}
 \end{frame}
 
 \section{Basic Usage}
